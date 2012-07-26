@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxLayerManager.h"
 
-class ofxLayer : public ofBaseApp
+class ofxLayer
 {
 public:
 	

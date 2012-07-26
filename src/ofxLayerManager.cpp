@@ -30,8 +30,15 @@ void ofxLayerManager::update()
 
 void ofxLayerManager::draw()
 {
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	
+	ofEnableAlphaBlending();
+	glDisable(GL_DEPTH_TEST);
+	
 	for (int i = 0; i < layers.size(); i++)
 		layers[i]->layerDraw();
+	
+	glPopAttrib();
 }
 
 void ofxLayerManager::deleteLayer(ofxLayer *layer)
