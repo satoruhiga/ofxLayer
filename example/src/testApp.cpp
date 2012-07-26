@@ -14,7 +14,10 @@ public:
 	void draw()
 	{
 		ofSetColor(0, 255, 0);
-		ofRect(ofGetMouseX()-50, ofGetMouseY()-50, 100, 100);
+		
+		ofRect(ofGetMouseX(), ofGetMouseY(), 100, 100);
+		
+		ofDrawBitmapString(ofToString(__PRETTY_FUNCTION__), 10, 20 + 20 * getLayerIndex());
 	}
 
 };
@@ -31,12 +34,34 @@ public:
 	void draw()
 	{
 		ofSetColor(255, 0, 0);
-		ofRect(ofGetMouseX(), ofGetMouseY(), 100, 100);
+		ofRect(ofGetMouseX() + 10, ofGetMouseY() + 10, 100, 100);
+		
+		ofDrawBitmapString(ofToString(__PRETTY_FUNCTION__), 10, 20 + 20 * getLayerIndex());
 	}
 };
 
+class TestLayer3 : public ofxLayer
+{
+public:
+	
+	void update()
+	{
+		ofBackground(0, 0, 0, 0);
+	}
+	
+	void draw()
+	{
+		ofSetColor(0, 0, 255);
+		ofRect(ofGetMouseX() + 20, ofGetMouseY() + 20, 100, 100);
+		
+		ofDrawBitmapString(ofToString(__PRETTY_FUNCTION__), 10, 20 + 20 * getLayerIndex());
+	}
+};
+
+
 TestLayer1 *layer1;
 TestLayer2 *layer2;
+TestLayer3 *layer3;
 
 ofxLayerManager &mng = ofxLayerManager::instance();
 
@@ -52,12 +77,15 @@ void testApp::setup()
 	
 	layer1 = mng.createLayer<TestLayer1>();
 	layer2 = mng.createLayer<TestLayer2>();
+	layer3 = mng.createLayer<TestLayer3>();
 }
 
 //--------------------------------------------------------------
 void testApp::update()
 {
 	mng.update();
+	
+	ofSetWindowTitle(ofToString(ofGetFrameRate(), 2));
 }
 
 //--------------------------------------------------------------
