@@ -55,7 +55,8 @@ void ofxLayer::layerDraw()
 	if (visible && alpha > 0)
 	{
 		ofSetColor(255, alpha * 255);
-		frameBuffer.draw(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
+		frameBuffer.draw(0, frameBuffer.getHeight(),
+						 frameBuffer.getWidth(), -frameBuffer.getHeight());
 	}
 }
 
@@ -104,4 +105,14 @@ void ofxLayer::moveUp()
 void ofxLayer::moveDown()
 {
 	setLayerIndex(layer_index + 1);
+}
+
+void ofxLayer::mute()
+{
+	ofxLayerManager::instance().mute(this);
+}
+
+void ofxLayer::solo()
+{
+	ofxLayerManager::instance().solo(this);
 }

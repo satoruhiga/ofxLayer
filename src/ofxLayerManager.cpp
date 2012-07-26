@@ -47,11 +47,27 @@ void ofxLayerManager::deleteLayer(ofxLayer *layer)
 	
 	vector<ofxLayer*>::iterator it = find(layers.begin(), layers.end(), layer);
 	if (it == layers.end())
+	{
+		layer_map.erase(layer->getName());
 		layers.erase(it);
+	}
 	
 	updateLayerIndex();
 	
 	delete layer;
+}
+
+vector<string> ofxLayerManager::getLayerNames()
+{
+	vector<string> names;
+	for (int i = 0; i < layers.size(); i++)
+		names.push_back(layers[i]->getName());
+	return names;
+}
+
+const vector<ofxLayer*>& ofxLayerManager::getLayers()
+{
+	return layers;
 }
 
 void ofxLayerManager::mute(int index)
@@ -65,6 +81,11 @@ void ofxLayerManager::mute(ofxLayer *layer)
 		if (layers[i] == layer) layers[i]->enable = false;
 }
 
+void ofxLayerManager::mute(const string& name)
+{
+	mute(getLayerByName(name));
+}
+
 void ofxLayerManager::solo(int index)
 {
 	solo(layers.at(index));
@@ -76,10 +97,25 @@ void ofxLayerManager::solo(ofxLayer *layer)
 		layers[i]->enable = (layers[i] == layer);
 }
 
+void ofxLayerManager::solo(const string& name)
+{
+	solo(getLayerByName(name));
+}
+
 void ofxLayerManager::updateLayerIndex()
 {
 	for (int i = 0; i < layers.size(); i++)
 	{
 		layers[i]->layer_index = i;
 	}
+}
+
+ofxLayer* ofxLayerManager::getLayerByName(const string& name)
+{
+	return layer_map[name];
+}
+
+int ofxLayerManager::getLayerIndexByName(const string& name)
+{
+	return layer_map[name]->layer_index;
 }

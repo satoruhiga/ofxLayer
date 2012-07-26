@@ -9,6 +9,8 @@ public:
 	
 	friend class ofxLayerManager;
 	
+	virtual const char* getName() { throw runtime_error("ofxLayer::getName() must override"); return NULL; }
+	
 	virtual void setup() {}
 	virtual void update() {}
 	virtual void draw() {}
@@ -30,6 +32,9 @@ public:
 	
 	void moveUp();
 	void moveDown();
+	
+	void mute();
+	void solo();
 	
 public:
 	

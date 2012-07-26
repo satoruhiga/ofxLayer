@@ -23,7 +23,16 @@ public:
 	{
 		T *layer = new T;
 		layer->allocateFramebuffer(width, height);
+		
 		layers.push_back(layer);
+		
+		string name = layer->getName();
+		
+		if (layer_map.find(name) != layer_map.end())
+			throw runtime_error("ofxLayer::getName() must be unique");
+			
+		layer_map[name] = layer;
+		
 		updateLayerIndex();
 		
 		layer->layerSetup();
@@ -33,17 +42,26 @@ public:
 	
 	void deleteLayer(ofxLayer *layer);
 	
+	vector<string> getLayerNames();
+	const vector<ofxLayer*>& getLayers();
+	
 	void mute(int index);
 	void mute(ofxLayer *layer);
+	void mute(const string& name);
 	
 	void solo(int index);
 	void solo(ofxLayer *layer);
+	void solo(const string& name);
 	
-	void updateLayerIndex();
+	ofxLayer* getLayerByName(const string& name);
+	int getLayerIndexByName(const string& name);
 	
 protected:
 	
 	vector<ofxLayer*> layers;
+	map<string, ofxLayer*> layer_map;
+	
+	void updateLayerIndex();
 	
 private:
 	
