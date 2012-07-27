@@ -10,7 +10,12 @@ ofxLayer::~ofxLayer()
 
 void ofxLayer::allocateFramebuffer(int width, int height)
 {
-	frameBuffer.allocate(width, height, GL_RGBA);
+	ofFbo::Settings s = ofFbo::Settings();
+	s.width = width;
+	s.height = height;
+	s.internalformat = GL_RGBA;
+	s.useDepth = true;
+	frameBuffer.allocate(s);
 }
 
 void ofxLayer::layerSetup()

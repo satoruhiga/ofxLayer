@@ -21,7 +21,7 @@ public:
 	void setVisible(bool v) { visible = v; }
 	bool getVisible() { return visible; }
 	
-	void setAlpha(float a) { alpha = a; }
+	void setAlpha(float a) { enable = visible = alpha > 0; alpha = a; }
 	float getAlpha() { return alpha; }
 	
 	int getLayerIndex();
