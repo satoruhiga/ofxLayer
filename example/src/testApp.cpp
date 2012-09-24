@@ -6,6 +6,8 @@ class TestLayer1 : public ofxLayer
 {
 public:
 	
+	const char* getName() { return "TestLayer1"; }
+	
 	void update()
 	{
 		ofBackground(0, 0, 0, 0);
@@ -26,6 +28,8 @@ class TestLayer2 : public ofxLayer
 {
 public:
 	
+	const char* getName() { return "TestLayer2"; }
+	
 	void update()
 	{
 		ofBackground(0, 0, 0, 0);
@@ -43,6 +47,8 @@ public:
 class TestLayer3 : public ofxLayer
 {
 public:
+	
+	const char* getName() { return "TestLayer3"; }
 	
 	void update()
 	{
@@ -63,7 +69,7 @@ TestLayer1 *layer1;
 TestLayer2 *layer2;
 TestLayer3 *layer3;
 
-ofxLayerManager &mng = ofxLayerManager::instance();
+ofxLayerManager mng;
 
 //--------------------------------------------------------------
 void testApp::setup()

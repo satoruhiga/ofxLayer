@@ -2,17 +2,7 @@
 
 #include "ofxLayer.h"
 
-ofxLayerManager* ofxLayerManager::_instance = NULL;
-
-ofxLayerManager& ofxLayerManager::instance()
-{
-	if (_instance == NULL)
-		_instance = new ofxLayerManager;
-	
-	return *_instance;
-}
-
-ofxLayerManager::ofxLayerManager()
+ofxLayerManager::ofxLayerManager() : background(0, 0), backgroundAuto(true)
 {
 }
 
@@ -20,6 +10,8 @@ void ofxLayerManager::setup(int width_, int height_)
 {
 	width = width_;
 	height = height_;
+	
+	frameBuffer.allocate(width, height, GL_RGBA);
 }
 
 void ofxLayerManager::update()
@@ -31,16 +23,30 @@ void ofxLayerManager::update()
 void ofxLayerManager::draw()
 {
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	
-	glDisable(GL_DEPTH_TEST);
-	
-	vector<ofxLayer*>::reverse_iterator it = layers.rbegin();
-	while (it != layers.rend())
 	{
-		(*it)->layerDraw();
-		it++;
+		glDisable(GL_DEPTH_TEST);
+		
+		frameBuffer.begin();
+		
+		if (backgroundAuto)
+			ofClear(background.r, background.g, background.b, background.a);
+		
+		vector<ofxLayer*>::reverse_iterator it = layers.rbegin();
+		while (it != layers.rend())
+		{
+			(*it)->layerDraw();
+			it++;
+		}
+		frameBuffer.end();
 	}
+	glPopAttrib();
 	
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	{
+		ofEnableAlphaBlending();
+		ofSetColor(255, 255);
+		frameBuffer.draw(0, 0);
+	}
 	glPopAttrib();
 }
 

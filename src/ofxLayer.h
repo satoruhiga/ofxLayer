@@ -46,6 +46,11 @@ protected:
 	void ofBackground(int r, int g, int b, int a = 255);
 	void ofBackground(int b, int a = 255);
 	
+	inline ofRectangle ofGetCurrentViewport()
+	{
+		return ofRectangle(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
+	}
+	
 	inline int ofGetWidth()
 	{
 		return frameBuffer.getWidth();
@@ -56,9 +61,6 @@ protected:
 		return frameBuffer.getHeight();
 	}
 	
-	void registerLayer();
-	void unregisterLayer();
-	
 protected:
 	
 	bool visible, enable;
@@ -66,6 +68,7 @@ protected:
 	
 	ofColor background;
 	ofFbo frameBuffer;
+	ofxLayerManager *manager;
 	
 	float alpha;
 	

@@ -10,9 +10,16 @@ public:
 	
 	friend class ofxLayer;
 	
-	static ofxLayerManager& instance();
-	
 	ofxLayerManager();
+	~ofxLayerManager() {}
+
+	void setBackground(int b, int a = 255) { background.set(b, a); }
+	void setBackground(int r, int g, int b, int a = 255) { background.set(r, g, b, a); }
+	void setBackground(ofColor c) { background = c; }
+	
+	void setBackgroundAuto(bool v) { backgroundAuto = v; }
+	
+	ofFbo& getFramebuffer() { return frameBuffer; }
 	
 	void setup(int width = ::ofGetWidth(), int height = ::ofGetHeight());
 	void update();
@@ -23,6 +30,7 @@ public:
 	{
 		T *layer = new T;
 		layer->allocateFramebuffer(width, height);
+		layer->manager = this;
 		
 		layers.push_back(layer);
 		
@@ -67,10 +75,11 @@ private:
 	
 	ofxLayerManager(const ofxLayerManager&);
 	ofxLayerManager& operator=(const ofxLayerManager&);
-	~ofxLayerManager();
-	
-	static ofxLayerManager* _instance;
 	
 	int width, height;
+	
+	bool backgroundAuto;
+	ofColor background;
+	ofFbo frameBuffer;
 };
 

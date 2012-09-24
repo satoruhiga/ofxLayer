@@ -1,6 +1,6 @@
 #include "ofxLayer.h"
 
-ofxLayer::ofxLayer() : visible(true), enable(true), alpha(1)
+ofxLayer::ofxLayer() : manager(NULL), visible(true), enable(true), alpha(1)
 {
 }
 
@@ -33,7 +33,7 @@ void ofxLayer::layerUpdate()
 	{
 		update();
 		
-		frameBuffer.begin();
+		frameBuffer.begin(false);
 		
 		ofPushStyle();
 		glPushMatrix();
@@ -82,13 +82,13 @@ int ofxLayer::getLayerIndex()
 
 void ofxLayer::setLayerIndex(int index)
 {
-	vector<ofxLayer*> &layers = ofxLayerManager::instance().layers;
+	vector<ofxLayer*> &layers = manager->layers;
 	if (index < 0 || index >= layers.size()) return;
 	
 	vector<ofxLayer*>::iterator it = layers.begin();
 	iter_swap(it + layer_index, it + index);
 	
-	ofxLayerManager::instance().updateLayerIndex();
+	manager->updateLayerIndex();
 }
 
 void ofxLayer::moveFront()
@@ -98,7 +98,7 @@ void ofxLayer::moveFront()
 
 void ofxLayer::moveBack()
 {
-	vector<ofxLayer*> &layers = ofxLayerManager::instance().layers;
+	vector<ofxLayer*> &layers = manager->layers;
 	setLayerIndex(layers.size() - 1);
 }
 
@@ -114,10 +114,10 @@ void ofxLayer::moveDown()
 
 void ofxLayer::mute()
 {
-	ofxLayerManager::instance().mute(this);
+	manager->mute(this);
 }
 
 void ofxLayer::solo()
 {
-	ofxLayerManager::instance().solo(this);
+	manager->solo(this);
 }
