@@ -32,14 +32,12 @@ public:
 		layer->allocateFramebuffer(width, height);
 		layer->manager = this;
 		
-		layers.push_back(layer);
-		
 		string name = layer->getName();
-		
 		if (layer_map.find(name) != layer_map.end())
 			throw runtime_error("ofxLayer::getName() must be unique");
-			
 		layer_map[name] = layer;
+		
+		layers.push_back(layer);
 		
 		updateLayerIndex();
 		

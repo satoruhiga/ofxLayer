@@ -18,10 +18,7 @@ void ofxLayerManager::update()
 {
 	for (int i = 0; i < layers.size(); i++)
 		layers[i]->layerUpdate();
-}
-
-void ofxLayerManager::draw()
-{
+	
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	{
 		glDisable(GL_DEPTH_TEST);
@@ -40,7 +37,10 @@ void ofxLayerManager::draw()
 		frameBuffer.end();
 	}
 	glPopAttrib();
-	
+}
+
+void ofxLayerManager::draw()
+{
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	{
 		ofEnableAlphaBlending();

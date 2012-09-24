@@ -64,14 +64,15 @@ protected:
 	
 protected:
 	
+	ofxLayerManager *manager;
+	
 	bool visible, enable;
+	float alpha;
+	
 	int layer_index;
 	
 	ofColor background;
 	ofFbo frameBuffer;
-	ofxLayerManager *manager;
-	
-	float alpha;
 	
 	void allocateFramebuffer(int width, int height);
 	
