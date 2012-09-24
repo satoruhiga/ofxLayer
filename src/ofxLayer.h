@@ -15,14 +15,15 @@ public:
 	virtual void update() {}
 	virtual void draw() {}
 	
-	void setEnable(bool v) { enable = v; }
-	bool getEnable() { return enable; }
+	inline void setEnable(bool v) { enable = v; }
+	inline bool getEnable() { return enable; }
+	inline bool isEnable() { return getEnable(); }
 	
-	void setVisible(bool v) { visible = v; }
-	bool getVisible() { return visible; }
+	inline void setVisible(bool v) { visible = v; }
+	inline bool getVisible() { return visible; }
 	
-	void setAlpha(float a) { enable = visible = alpha > 0; alpha = a; }
-	float getAlpha() { return alpha; }
+	inline void setAlpha(float a) { enable = visible = alpha > 0; alpha = a; }
+	inline float getAlpha() { return alpha; }
 	
 	int getLayerIndex();
 	void setLayerIndex(int index);
