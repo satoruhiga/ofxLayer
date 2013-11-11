@@ -1,27 +1,40 @@
 #pragma once
 
 #include "ofMain.h"
+
+#include "ofxLayerConstants.h"
+
 #include "ofxLayerManager.h"
 
-class ofxLayer
+#define OFX_LAYER_DEFINE_LAYER_CLASS(Klass) public: const char* getClassName() const { return #Klass; } \
+	unsigned int getClassID() const { return ofx::Layer::Type2Int<Klass>::value(); }
+
+OFX_LAYER_BEGIN_NAMESPACE
+
+class Layer
 {
+	friend class Manager;
+	
 public:
 	
-	friend class ofxLayerManager;
+	// use OFX_LAYER_DEFINE_LAYER_CLASS
+	virtual const char* getClassName() const = 0;
+	virtual unsigned int getClassID() const = 0;
 	
-	virtual const char* getName() { throw runtime_error("ofxLayer::getName() must override"); return NULL; }
+public:
 	
 	virtual void setup() {}
 	virtual void update() {}
 	virtual void draw() {}
 	
-	void setEnable(bool v) { enable = v; }
-	bool getEnable() { return enable; }
-	
 	void setVisible(bool v) { visible = v; }
 	bool getVisible() { return visible; }
 	
-	void setAlpha(float a) { enable = visible = alpha > 0; alpha = a; }
+	void setAlpha(float a)
+	{
+		visible = (a > 0);
+		alpha = a;
+	}
 	float getAlpha() { return alpha; }
 	
 	int getLayerIndex();
@@ -35,12 +48,7 @@ public:
 	
 	void mute();
 	void solo();
-	
-public:
-	
-	ofxLayer();
-	virtual ~ofxLayer();
-	
+
 protected:
 	
 	void ofBackground(int r, int g, int b, int a = 255);
@@ -48,34 +56,41 @@ protected:
 	
 	inline ofRectangle ofGetCurrentViewport()
 	{
-		return ofRectangle(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
+		return ofRectangle(rect);
 	}
 	
 	inline int ofGetWidth()
 	{
-		return frameBuffer.getWidth();
+		return rect.width;
 	}
 	
 	inline int ofGetHeight()
 	{
-		return frameBuffer.getHeight();
+		return rect.height;
 	}
 	
 protected:
 	
-	bool visible, enable;
+	Layer();
+	virtual ~Layer();
+	
+	bool visible;
 	int layer_index;
 	
+	ofRectangle rect;
 	ofColor background;
-	ofFbo frameBuffer;
-	ofxLayerManager *manager;
+	Manager *manager;
+	unsigned int class_id;
 	
 	float alpha;
 	
-	void allocateFramebuffer(int width, int height);
-	
-	void layerSetup();
+	void layerSetup(int width, int height);
 	void layerUpdate();
-	void layerDraw();
-
+	
+private:
+	
+	Layer(const Layer&);
+	Layer& operator=(const Layer&);
 };
+
+OFX_LAYER_END_NAMESPACE

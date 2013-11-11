@@ -1,17 +1,20 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxLayerConstants.h"
 
-class ofxLayer;
+OFX_LAYER_BEGIN_NAMESPACE
 
-class ofxLayerManager
+class Layer;
+
+class Manager
 {
+	friend class Layer;
+	
 public:
 	
-	friend class ofxLayer;
-	
-	ofxLayerManager();
-	~ofxLayerManager() {}
+	Manager();
+	~Manager() {}
 
 	void setBackground(int b, int a = 255) { background.set(b, a); }
 	void setBackground(int r, int g, int b, int a = 255) { background.set(r, g, b, a); }
@@ -26,60 +29,70 @@ public:
 	void draw();
 	
 	template <typename T>
-	T* createLayer()
+	T* createLayer(float alpha = 0)
 	{
 		T *layer = new T;
-		layer->allocateFramebuffer(width, height);
 		layer->manager = this;
 		
+		string name = layer->getClassName();
+		unsigned int class_id = Type2Int<T>::value();
+		
+		if (layer_class_id_map.find(class_id) != layer_class_id_map.end())
+			throw runtime_error("layer must be unique");
+		
 		layers.push_back(layer);
+		layer_class_id_map[class_id] = layer;
+		layer_class_name_map[name] = layer;
 		
-		string name = layer->getName();
-		
-		if (layer_map.find(name) != layer_map.end())
-			throw runtime_error("ofxLayer::getName() must be unique");
-			
-		layer_map[name] = layer;
-		
-		updateLayerIndex();
-		
-		layer->layerSetup();
+		layer->layerSetup(width, height);
+		layer->setAlpha(alpha);
 		
 		return layer;
 	}
 	
-	void deleteLayer(ofxLayer *layer);
+	void deleteLayer(Layer *layer);
 	
-	vector<string> getLayerNames();
-	const vector<ofxLayer*>& getLayers();
+	template <typename T>
+	T* getLayer()
+	{
+		unsigned int class_id = Type2Int<T>::value();
+		if (layer_class_id_map.find(class_id) == layer_class_id_map.end())
+			return NULL;
+		return (T*)layer_class_id_map[class_id];
+	}
+	
+	Layer* getLayerByName(const string& name);
+	int getLayerIndexByName(const string& name);
 	
 	void mute(int index);
-	void mute(ofxLayer *layer);
+	void mute(Layer *layer);
 	void mute(const string& name);
 	
 	void solo(int index);
-	void solo(ofxLayer *layer);
+	void solo(Layer *layer);
 	void solo(const string& name);
 	
-	ofxLayer* getLayerByName(const string& name);
-	int getLayerIndexByName(const string& name);
-	
+	vector<string> getLayerNames();
+	const vector<Layer*>& getLayers();
+
 protected:
 	
-	vector<ofxLayer*> layers;
-	map<string, ofxLayer*> layer_map;
-	
-	void updateLayerIndex();
+	vector<Layer*> layers;
+	map<string, Layer*> layer_class_name_map;
+	map<unsigned int, Layer*> layer_class_id_map;
 	
 private:
 	
-	ofxLayerManager(const ofxLayerManager&);
-	ofxLayerManager& operator=(const ofxLayerManager&);
+	Manager(const Manager&);
+	Manager& operator=(const Manager&);
 	
 	int width, height;
 	
 	bool backgroundAuto;
 	ofColor background;
 	ofFbo frameBuffer;
+	ofFbo layerFrameBuffer;
 };
 
+
+OFX_LAYER_END_NAMESPACE

@@ -1,123 +1,84 @@
 #include "ofxLayer.h"
 
-ofxLayer::ofxLayer() : manager(NULL), visible(true), enable(true), alpha(1)
+OFX_LAYER_BEGIN_NAMESPACE
+
+Layer::Layer() : manager(NULL), visible(false), alpha(0)
 {
 }
 
-ofxLayer::~ofxLayer()
+Layer::~Layer()
 {
 }
 
-void ofxLayer::allocateFramebuffer(int width, int height)
-{
-	ofFbo::Settings s = ofFbo::Settings();
-	s.width = width;
-	s.height = height;
-	s.internalformat = GL_RGBA;
-	s.useDepth = true;
-	frameBuffer.allocate(s);
-}
-
-void ofxLayer::layerSetup()
+void Layer::layerSetup(int width, int height)
 {
 	float *bg = ofBgColorPtr();
 	background.set(bg[0] * 255, bg[1] * 255, bg[2] * 255);
+	rect.width = width;
+	rect.height = height;
 	setup();
 }
 
-void ofxLayer::layerUpdate()
+void Layer::layerUpdate()
 {
-	if (!enable) return;
+	if (!visible) return;
 	
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	{
-		update();
-		
-		frameBuffer.begin(false);
-		
-		ofPushStyle();
-		glPushMatrix();
-		
-		ofDisableAlphaBlending();
-		ofDisableSmoothing();
-		
-		ofClear(background.r, background.g, background.b, background.a);
-		
-		draw();
-		
-		glPopMatrix();
-		ofPopStyle();
-		
-		frameBuffer.end();
-	}
-	glPopAttrib();
+	update();
 }
 
-void ofxLayer::layerDraw()
-{
-	if (!enable) return;
-	
-	if (visible && alpha > 0)
-	{
-		ofSetColor(255, alpha * 255);
-		frameBuffer.draw(0, frameBuffer.getHeight(),
-						 frameBuffer.getWidth(), -frameBuffer.getHeight());
-	}
-}
-
-void ofxLayer::ofBackground(int r, int g, int b, int a)
+void Layer::ofBackground(int r, int g, int b, int a)
 {
 	background.set(r, g, b, a);
 }
 
-void ofxLayer::ofBackground(int b, int a)
+void Layer::ofBackground(int b, int a)
 {
 	background.set(b, a);
 }
 
-int ofxLayer::getLayerIndex()
+int Layer::getLayerIndex()
 {
 	return layer_index;
 }
 
-void ofxLayer::setLayerIndex(int index)
+void Layer::setLayerIndex(int index)
 {
-	vector<ofxLayer*> &layers = manager->layers;
+	vector<Layer*> &layers = manager->layers;
 	if (index < 0 || index >= layers.size()) return;
 	
-	vector<ofxLayer*>::iterator it = layers.begin();
+	vector<Layer*>::iterator it = layers.begin();
 	iter_swap(it + layer_index, it + index);
-	
-	manager->updateLayerIndex();
 }
 
-void ofxLayer::moveFront()
+void Layer::moveFront()
 {
 	setLayerIndex(0);
 }
 
-void ofxLayer::moveBack()
+void Layer::moveBack()
 {
-	vector<ofxLayer*> &layers = manager->layers;
+	vector<Layer*> &layers = manager->layers;
 	setLayerIndex(layers.size() - 1);
 }
 
-void ofxLayer::moveUp()
+void Layer::moveUp()
 {
 	setLayerIndex(layer_index - 1);
 }
 
-void ofxLayer::moveDown()
+void Layer::moveDown()
 {
 	setLayerIndex(layer_index + 1);
 }
 
-void ofxLayer::mute()
+void Layer::mute()
 {
 	manager->mute(this);
 }
 
-void ofxLayer::solo()
+void Layer::solo()
 {
 	manager->solo(this);
 }
+
+OFX_LAYER_END_NAMESPACE
