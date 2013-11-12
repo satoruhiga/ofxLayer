@@ -4,7 +4,7 @@
 
 OFX_LAYER_BEGIN_NAMESPACE
 
-Manager::Manager() : background(0, 0), backgroundAuto(true)
+Manager::Manager() : backgroundAuto(true)
 {
 }
 
@@ -25,14 +25,17 @@ void Manager::update()
 
 void Manager::draw()
 {
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	ofPushStyle();
 	{
 		ofDisableDepthTest();
-		
+
 		frameBuffer.begin();
 		
 		if (backgroundAuto)
-			ofClear(background.r, background.g, background.b, background.a);
+		{
+			ofColor background = ofGetStyle().bgColor;
+			ofClear(background.r, background.g, background.b, 0);
+		}
 		
 		vector<Layer*>::reverse_iterator it = layers.rbegin();
 		while (it != layers.rend())
@@ -53,7 +56,7 @@ void Manager::draw()
 					ofDisableSmoothing();
 					ofDisableDepthTest();
 					
-					ofClear(layer->background.r);
+					ofClear(layer->background);
 					
 					layer->draw();
 					
@@ -63,26 +66,25 @@ void Manager::draw()
 					frameBuffer.end();
 				}
 				glPopAttrib();
-				
+
 				// draw fbo
 				ofSetColor(255, layer->alpha * 255);
-				layerFrameBuffer.draw(0, layerFrameBuffer.getHeight(),
-									  layerFrameBuffer.getWidth(), -layerFrameBuffer.getHeight());
+				layerFrameBuffer.draw(0,
+									  layerFrameBuffer.getHeight(),
+									  layerFrameBuffer.getWidth(),
+									  -layerFrameBuffer.getHeight());
 			}
 			
 			it++;
 		}
+		
 		frameBuffer.end();
-	}
-	glPopAttrib();
-	
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	{
+
 		ofEnableAlphaBlending();
 		ofSetColor(255, 255);
 		frameBuffer.draw(0, 0);
 	}
-	glPopAttrib();
+	ofPopStyle();
 }
 
 void Manager::deleteLayer(Layer *layer)

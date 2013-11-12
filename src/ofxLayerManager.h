@@ -16,10 +16,6 @@ public:
 	Manager();
 	~Manager() {}
 
-	void setBackground(int b, int a = 255) { background.set(b, a); }
-	void setBackground(int r, int g, int b, int a = 255) { background.set(r, g, b, a); }
-	void setBackground(ofColor c) { background = c; }
-	
 	void setBackgroundAuto(bool v) { backgroundAuto = v; }
 	
 	ofFbo& getFramebuffer() { return frameBuffer; }
@@ -29,7 +25,7 @@ public:
 	void draw();
 	
 	template <typename T>
-	T* createLayer(float alpha = 0)
+	T* createLayer(float defalut_alpha = 0)
 	{
 		T *layer = new T;
 		layer->manager = this;
@@ -45,7 +41,7 @@ public:
 		layer_class_name_map[name] = layer;
 		
 		layer->layerSetup(width, height);
-		layer->setAlpha(alpha);
+		layer->setAlpha(defalut_alpha);
 		
 		return layer;
 	}
@@ -89,7 +85,6 @@ private:
 	int width, height;
 	
 	bool backgroundAuto;
-	ofColor background;
 	ofFbo frameBuffer;
 	ofFbo layerFrameBuffer;
 };
