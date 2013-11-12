@@ -63,16 +63,14 @@ void Manager::draw()
 					glPopMatrix();
 					ofPopStyle();
 					
-					frameBuffer.end();
+					layerFrameBuffer.end();
 				}
 				glPopAttrib();
 
 				// draw fbo
+				ofEnableAlphaBlending();
 				ofSetColor(255, layer->alpha * 255);
-				layerFrameBuffer.draw(0,
-									  layerFrameBuffer.getHeight(),
-									  layerFrameBuffer.getWidth(),
-									  -layerFrameBuffer.getHeight());
+				layerFrameBuffer.draw(0, 0);
 			}
 			
 			it++;
