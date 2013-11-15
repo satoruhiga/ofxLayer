@@ -29,6 +29,7 @@ public:
 	
 	void setVisible(bool v) { visible = v; }
 	bool getVisible() { return visible; }
+	bool isVisible() { return visible; }
 	
 	void setAlpha(float a)
 	{
@@ -74,20 +75,21 @@ protected:
 	Layer();
 	virtual ~Layer();
 	
-	bool visible;
-	int layer_index;
-	
-	ofRectangle rect;
-	ofColor background;
-	Manager *manager;
-	unsigned int class_id;
-	
-	float alpha;
-	
 	void layerSetup(int width, int height);
 	void layerUpdate();
 	
 private:
+	
+	Manager *manager;
+	
+	unsigned int class_id;
+	int layer_index;
+	
+	bool visible;
+
+	ofRectangle rect;
+	ofColor background;
+	float alpha;
 	
 	Layer(const Layer&);
 	Layer& operator=(const Layer&);
