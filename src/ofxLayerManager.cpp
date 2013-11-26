@@ -13,8 +13,15 @@ void Manager::setup(int width_, int height_)
 	width = width_;
 	height = height_;
 	
-	frameBuffer.allocate(width, height, GL_RGBA);
-	layerFrameBuffer.allocate(width, height, GL_RGBA);
+	ofFbo::Settings s;
+	s.width = width;
+	s.height = height;
+	s.useDepth = true;
+	s.useStencil = true;
+	s.internalformat = GL_RGBA;
+	
+	frameBuffer.allocate(s);
+	layerFrameBuffer.allocate(s);
 }
 
 void Manager::update()
@@ -52,11 +59,13 @@ void Manager::draw()
 					ofPushStyle();
 					glPushMatrix();
 					
-					ofDisableAlphaBlending();
 					ofDisableSmoothing();
-					ofDisableDepthTest();
+					ofEnableDepthTest();
+					ofEnableAlphaBlending();
+					ofDisableLighting();
 					
 					ofClear(layer->background);
+					ofSetColor(255, 255);
 					
 					layer->draw();
 					
@@ -68,7 +77,6 @@ void Manager::draw()
 				glPopAttrib();
 
 				// draw fbo
-				ofEnableAlphaBlending();
 				ofSetColor(255, layer->alpha * 255);
 				layerFrameBuffer.draw(0, 0);
 			}
