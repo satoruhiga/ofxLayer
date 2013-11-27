@@ -35,7 +35,7 @@ void Manager::draw()
 	ofPushStyle();
 	{
 		ofDisableDepthTest();
-
+		
 		frameBuffer.begin();
 		
 		if (backgroundAuto)
@@ -75,7 +75,7 @@ void Manager::draw()
 					layerFrameBuffer.end();
 				}
 				glPopAttrib();
-
+				
 				// draw fbo
 				ofSetColor(255, layer->alpha * 255);
 				layerFrameBuffer.draw(0, 0);
@@ -85,12 +85,10 @@ void Manager::draw()
 		}
 		
 		frameBuffer.end();
-
-		ofEnableAlphaBlending();
-		ofSetColor(255, 255);
-		frameBuffer.draw(0, 0);
 	}
 	ofPopStyle();
+
+	frameBuffer.draw(0, 0);
 }
 
 void Manager::deleteLayer(Layer *layer)
