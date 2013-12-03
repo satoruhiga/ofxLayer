@@ -54,7 +54,7 @@ void Manager::draw()
 				// render to fbo
 				glPushAttrib(GL_ALL_ATTRIB_BITS);
 				{
-					layerFrameBuffer.begin(false);
+					layerFrameBuffer.begin();
 					
 					ofPushStyle();
 					glPushMatrix();
