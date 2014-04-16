@@ -2,7 +2,7 @@
 
 OFX_LAYER_BEGIN_NAMESPACE
 
-Layer::Layer() : manager(NULL), visible(false), alpha(0)
+Layer::Layer() : manager(NULL), visible(false), alpha(0), blendMode(OF_BLENDMODE_DISABLED)
 {
 }
 
@@ -21,6 +21,8 @@ void Layer::layerSetup(int width, int height)
 
 void Layer::layerUpdate()
 {
+    updateEvery();
+    
 	if (!visible) return;
 	
 	update();

@@ -77,8 +77,12 @@ void Manager::draw()
 				glPopAttrib();
 				
 				// draw fbo
-				ofSetColor(255, layer->alpha * 255);
+				ofEnableAlphaBlending();
+                ofSetColor(255, layer->alpha * 255);
+                if ( layer->getBlendMode() > 0 ) ofEnableBlendMode(layer->getBlendMode());
 				layerFrameBuffer.draw(0, 0);
+                ofDisableBlendMode();
+                
 			}
 			
 			it++;

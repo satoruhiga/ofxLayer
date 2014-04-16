@@ -24,6 +24,7 @@ public:
 public:
 	
 	virtual void setup() {}
+    virtual void updateEvery() {}
 	virtual void update() {}
 	virtual void draw() {}
 	
@@ -49,6 +50,14 @@ public:
 	
 	void mute();
 	void solo();
+    
+    ofBlendMode getBlendMode(){
+        return blendMode;
+    }
+    
+    void setBlendMode(ofBlendMode mode){
+        blendMode = mode;
+    }
 
 protected:
 	
@@ -79,6 +88,8 @@ protected:
 	void layerUpdate();
 	
 private:
+    
+    ofBlendMode blendMode;
 	
 	Manager *manager;
 	
