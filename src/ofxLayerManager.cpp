@@ -27,7 +27,9 @@ void Manager::setup(int width_, int height_)
 void Manager::update()
 {
 	for (int i = 0; i < layers.size(); i++)
+	{
 		layers[i]->layerUpdate();
+	}
 }
 
 void Manager::draw()
@@ -49,7 +51,7 @@ void Manager::draw()
 		{
 			Layer *layer = *it;
 			
-			if (layer->visible)
+			if (layer->isVisible())
 			{
 				// render to fbo
 				glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -78,11 +80,11 @@ void Manager::draw()
 				
 				// draw fbo
 				ofEnableAlphaBlending();
+				ofDisableDepthTest();
                 ofSetColor(255, layer->alpha * 255);
                 if ( layer->getBlendMode() > 0 ) ofEnableBlendMode(layer->getBlendMode());
 				layerFrameBuffer.draw(0, 0);
                 ofDisableBlendMode();
-                
 			}
 			
 			it++;
@@ -131,6 +133,14 @@ Layer* Manager::getLayerByName(const string& name)
 int Manager::getLayerIndexByName(const string& name)
 {
 	return layer_class_name_map[name]->layer_index;
+}
+
+void Manager::updateLayerIndex()
+{
+	for (int i = 0; i < layers.size(); i++)
+	{
+		layers[i]->layer_index = i;
+	}
 }
 
 OFX_LAYER_END_NAMESPACE

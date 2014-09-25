@@ -46,10 +46,14 @@ int Layer::getLayerIndex()
 void Layer::setLayerIndex(int index)
 {
 	vector<Layer*> &layers = manager->layers;
+	
 	if (index < 0 || index >= layers.size()) return;
 	
-	vector<Layer*>::iterator it = layers.begin();
-	iter_swap(it + layer_index, it + index);
+	Layer* self = layers[layer_index];
+	layers.erase(layers.begin() + layer_index);
+	
+	layers.insert(layers.begin() + index, self);
+	manager->updateLayerIndex();
 }
 
 void Layer::moveFront()

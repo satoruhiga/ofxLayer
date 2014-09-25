@@ -36,6 +36,8 @@ public:
 		if (layer_class_id_map.find(class_id) != layer_class_id_map.end())
 			throw runtime_error("layer must be unique");
 		
+		layer->layer_index = layers.size();
+		
 		layers.push_back(layer);
 		layer_class_id_map[class_id] = layer;
 		layer_class_name_map[name] = layer;
@@ -79,6 +81,8 @@ private:
 	bool backgroundAuto;
 	ofFbo frameBuffer;
 	ofFbo layerFrameBuffer;
+	
+	void updateLayerIndex();
 };
 
 
