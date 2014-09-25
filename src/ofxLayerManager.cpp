@@ -4,7 +4,8 @@
 
 OFX_LAYER_BEGIN_NAMESPACE
 
-Manager::Manager() : backgroundAuto(true)
+Manager::Manager()
+	: backgroundAuto(true)
 {
 }
 
@@ -12,14 +13,14 @@ void Manager::setup(int width_, int height_)
 {
 	width = width_;
 	height = height_;
-	
+
 	ofFbo::Settings s;
 	s.width = width;
 	s.height = height;
 	s.useDepth = true;
 	s.useStencil = true;
 	s.internalformat = GL_RGBA;
-	
+
 	frameBuffer.allocate(s);
 	layerFrameBuffer.allocate(s);
 }
@@ -30,10 +31,7 @@ void Manager::update()
 	{
 		layers[i]->layerUpdate();
 	}
-}
-
-void Manager::draw()
-{
+	
 	ofPushStyle();
 	{
 		ofDisableDepthTest();
@@ -49,11 +47,11 @@ void Manager::draw()
 		vector<Layer*>::reverse_iterator it = layers.rbegin();
 		while (it != layers.rend())
 		{
-			Layer *layer = *it;
+			Layer* layer = *it;
 			
 			if (layer->isVisible())
 			{
-				// render to fbo
+				// render to layer fbo
 				glPushAttrib(GL_ALL_ATTRIB_BITS);
 				{
 					layerFrameBuffer.begin();
@@ -63,12 +61,12 @@ void Manager::draw()
 					
 					ofDisableSmoothing();
 					ofEnableDepthTest();
-					ofEnableAlphaBlending();
 					ofDisableLighting();
 					
 					ofClear(layer->background);
 					ofSetColor(255, 255);
 					
+					ofEnableBlendMode(layer->getBlendMode());
 					layer->draw();
 					
 					glPopMatrix();
@@ -78,13 +76,17 @@ void Manager::draw()
 				}
 				glPopAttrib();
 				
-				// draw fbo
-				ofEnableAlphaBlending();
-				ofDisableDepthTest();
-                ofSetColor(255, layer->alpha * 255);
-                if ( layer->getBlendMode() > 0 ) ofEnableBlendMode(layer->getBlendMode());
-				layerFrameBuffer.draw(0, 0);
-                ofDisableBlendMode();
+				// render to main fbo
+				glPushAttrib(GL_ALL_ATTRIB_BITS);
+				{
+					ofDisableDepthTest();
+					ofSetColor(255, layer->alpha * 255);
+					
+					ofEnableBlendMode(layer->getBlendMode());
+					layerFrameBuffer.draw(0, 0);
+					ofDisableBlendMode();
+				}
+				glPopAttrib();
 			}
 			
 			it++;
@@ -93,14 +95,17 @@ void Manager::draw()
 		frameBuffer.end();
 	}
 	ofPopStyle();
+}
 
+void Manager::draw()
+{
 	frameBuffer.draw(0, 0);
 }
 
-void Manager::deleteLayer(Layer *layer)
+void Manager::deleteLayer(Layer* layer)
 {
 	assert(layer);
-	
+
 	vector<Layer*>::iterator it = find(layers.begin(), layers.end(), layer);
 	if (it == layers.end())
 	{
@@ -108,7 +113,7 @@ void Manager::deleteLayer(Layer *layer)
 		layer_class_id_map.erase(layer->getClassID());
 		layers.erase(it);
 	}
-	
+
 	delete layer;
 }
 
@@ -120,10 +125,7 @@ vector<string> Manager::getLayerNames()
 	return names;
 }
 
-const vector<Layer*>& Manager::getLayers()
-{
-	return layers;
-}
+const vector<Layer*>& Manager::getLayers() { return layers; }
 
 Layer* Manager::getLayerByName(const string& name)
 {
