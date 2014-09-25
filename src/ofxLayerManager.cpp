@@ -123,38 +123,6 @@ const vector<Layer*>& Manager::getLayers()
 	return layers;
 }
 
-void Manager::mute(int index)
-{
-	mute(layers.at(index));
-}
-
-void Manager::mute(Layer *layer)
-{
-	for (int i = 0; i < layers.size(); i++)
-		if (layers[i] == layer) layers[i]->visible = false;
-}
-
-void Manager::mute(const string& name)
-{
-	mute(getLayerByName(name));
-}
-
-void Manager::solo(int index)
-{
-	solo(layers.at(index));
-}
-
-void Manager::solo(Layer *layer)
-{
-	for (int i = 0; i < layers.size(); i++)
-		layers[i]->visible = (layers[i] == layer);
-}
-
-void Manager::solo(const string& name)
-{
-	solo(getLayerByName(name));
-}
-
 Layer* Manager::getLayerByName(const string& name)
 {
 	return layer_class_name_map[name];

@@ -2,7 +2,7 @@
 
 OFX_LAYER_BEGIN_NAMESPACE
 
-Layer::Layer() : manager(NULL), visible(false), alpha(0), blendMode(OF_BLENDMODE_DISABLED)
+Layer::Layer() : manager(NULL), alpha(0), blendMode(OF_BLENDMODE_DISABLED)
 {
 }
 
@@ -23,7 +23,7 @@ void Layer::layerUpdate()
 {
     updateEvery();
     
-	if (!visible) return;
+	if (!isVisible()) return;
 	
 	update();
 }
@@ -71,16 +71,6 @@ void Layer::moveUp()
 void Layer::moveDown()
 {
 	setLayerIndex(layer_index + 1);
-}
-
-void Layer::mute()
-{
-	manager->mute(this);
-}
-
-void Layer::solo()
-{
-	manager->solo(this);
 }
 
 OFX_LAYER_END_NAMESPACE

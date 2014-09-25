@@ -60,14 +60,6 @@ public:
 	Layer* getLayerByName(const string& name);
 	int getLayerIndexByName(const string& name);
 	
-	void mute(int index);
-	void mute(Layer *layer);
-	void mute(const string& name);
-	
-	void solo(int index);
-	void solo(Layer *layer);
-	void solo(const string& name);
-	
 	vector<string> getLayerNames();
 	const vector<Layer*>& getLayers();
 

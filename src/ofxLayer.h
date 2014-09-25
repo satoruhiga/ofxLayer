@@ -28,15 +28,9 @@ public:
 	virtual void update() {}
 	virtual void draw() {}
 	
-	void setVisible(bool v) { visible = v; }
-	bool getVisible() { return visible; }
-	bool isVisible() { return visible; }
+	bool isVisible() { return alpha > 0; }
 	
-	void setAlpha(float a)
-	{
-		visible = (a > 0);
-		alpha = a;
-	}
+	void setAlpha(float a) { alpha = a; }
 	float getAlpha() { return alpha; }
 	
 	int getLayerIndex();
@@ -47,9 +41,6 @@ public:
 	
 	void moveUp();
 	void moveDown();
-	
-	void mute();
-	void solo();
     
     ofBlendMode getBlendMode(){
         return blendMode;
@@ -95,8 +86,6 @@ private:
 	
 	unsigned int class_id;
 	int layer_index;
-	
-	bool visible;
 
 	ofRectangle rect;
 	ofColor background;
