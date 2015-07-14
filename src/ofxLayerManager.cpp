@@ -19,10 +19,12 @@ void Manager::setup(int width_, int height_)
 	s.height = height;
 	s.useDepth = true;
 	s.useStencil = true;
-	s.internalformat = GL_RGBA;
+	s.internalformat = GL_RGB;
 
-	frameBuffer.allocate(s);
 	layerFrameBuffer.allocate(s);
+	
+	s.internalformat = GL_RGB;
+	frameBuffer.allocate(s);
 }
 
 void Manager::update()
@@ -43,6 +45,8 @@ void Manager::update()
 			ofColor background = ofGetStyle().bgColor;
 			ofClear(background.r, background.g, background.b, 0);
 		}
+		
+		frameBuffer.end();
 		
 		vector<Layer*>::reverse_iterator it = layers.rbegin();
 		while (it != layers.rend())
@@ -66,7 +70,6 @@ void Manager::update()
 					ofClear(layer->background);
 					ofSetColor(255, 255);
 					
-					ofEnableBlendMode(layer->getBlendMode());
 					layer->draw();
 					
 					glPopMatrix();
@@ -75,6 +78,8 @@ void Manager::update()
 					layerFrameBuffer.end();
 				}
 				glPopAttrib();
+				
+				frameBuffer.begin();
 				
 				// render to main fbo
 				glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -87,12 +92,12 @@ void Manager::update()
 					ofDisableBlendMode();
 				}
 				glPopAttrib();
+				
+				frameBuffer.end();
 			}
 			
 			it++;
 		}
-		
-		frameBuffer.end();
 	}
 	ofPopStyle();
 }

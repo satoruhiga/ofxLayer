@@ -45,7 +45,7 @@ public:
 	void moveUp();
 	void moveDown();
 
-	ofBlendMode getBlendMode() { return blendMode; }
+	ofBlendMode getBlendMode() const { return blendMode; }
 	void setBlendMode(ofBlendMode mode) { blendMode = mode; }
 
 protected:
@@ -55,10 +55,6 @@ protected:
 	inline ofRectangle ofGetCurrentViewport() { return ofRectangle(rect); }
 	inline int ofGetWidth() { return rect.width; }
 	inline int ofGetHeight() { return rect.height; }
-	
-	void ofEnableBlendMode(ofBlendMode mode) { setBlendMode(mode); }
-	void ofEnableAlphaBlending() { setBlendMode(OF_BLENDMODE_ALPHA); }
-	void ofDisableAlphaBlending() { setBlendMode(OF_BLENDMODE_DISABLED); }
 
 protected:
 	Layer();
