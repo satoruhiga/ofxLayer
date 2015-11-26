@@ -5,13 +5,15 @@
 
 OFX_LAYER_BEGIN_NAMESPACE
 
+typedef void* TYPE_ID;
+
 template<typename T>
-struct Type2Int
+struct RTTI
 {
-	static unsigned int value()
+	static TYPE_ID value()
 	{
 		static size_t m = 0;
-		return (unsigned int)&m;
+		return (TYPE_ID)&m;
 	}
 };
 

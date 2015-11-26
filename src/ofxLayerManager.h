@@ -30,7 +30,7 @@ public:
 		layer->manager = this;
 
 		string name = layer->getClassName();
-		unsigned int class_id = Type2Int<T>::value();
+		TYPE_ID class_id = RTTI<T>::value();
 
 		if (layer_class_id_map.find(class_id) != layer_class_id_map.end())
 			throw runtime_error("layer class must be unique");
@@ -52,7 +52,7 @@ public:
 	template <typename T>
 	T* getLayer()
 	{
-		unsigned int class_id = Type2Int<T>::value();
+		TYPE_ID class_id = RTTI<T>::value();
 		if (layer_class_id_map.find(class_id) == layer_class_id_map.end())
 			return NULL;
 		return (T*)layer_class_id_map[class_id];
@@ -67,7 +67,7 @@ public:
 protected:
 	vector<Layer*> layers;
 	map<string, Layer*> layer_class_name_map;
-	map<unsigned int, Layer*> layer_class_id_map;
+	map<TYPE_ID, Layer*> layer_class_id_map;
 
 private:
 	Manager(const Manager&);

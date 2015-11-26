@@ -9,9 +9,9 @@
 #define OFX_LAYER_DEFINE_LAYER_CLASS(Klass)             \
 public:                                                 \
 	const char* getClassName() const { return #Klass; } \
-	unsigned int getClassID() const                     \
+	TYPE_ID getClassID() const                     \
 	{                                                   \
-		return ofx::Layer::Type2Int<Klass>::value();    \
+		return ofx::Layer::RTTI<Klass>::value();    \
 	}
 
 OFX_LAYER_BEGIN_NAMESPACE
@@ -23,7 +23,7 @@ class Layer
 public:
 	// use OFX_LAYER_DEFINE_LAYER_CLASS
 	virtual const char* getClassName() const = 0;
-	virtual unsigned int getClassID() const = 0;
+	virtual TYPE_ID getClassID() const = 0;
 
 public:
 	virtual void setup() {}
@@ -68,7 +68,7 @@ private:
 
 	Manager* manager;
 
-	unsigned int class_id;
+	TYPE_ID class_id;
 	int layer_index;
 
 	ofRectangle rect;
